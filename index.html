@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Universal Rendering</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<h1>Universal Rendering</h1>
+					<p>(with the React ecosystem)</p>
+				</section>
+
+				<section>
+					<h2>Rewinding...</h2>
+				</section>
+
+				<section>
+					<section>
+						<h2>Server rendering</h2>
+					</section>
+					<section>
+						<pre><code>https://example.com...</code></pre>
+					</section>
+					<section>
+<pre><code>content-type: text/html</code></pre>
+<pre><code>&lt;html&gt;
+	&lt;body&gt;
+		&lt;h1&gt;Title&lt;/h1&gt;
+		&lt;p&gt;Noster hilotaes ducunt ad&lt;/p&gt;
+	&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+					</section>
+					<section>
+						<h3>Negatives</h3>
+						<p>The entire html payload on every request</p>
+					</section>
+					<section>
+						<p><img src="blog.jpg" /></p>
+					</section>
+					<section>
+						<p><img src="map.png" /></p>
+					</section>					
+				</section>
+
+				<section>
+					<section>
+						<h2>Client rendering</h2>
+					</section>
+					<section>
+					<p>JavaScript bundle Initially loaded</p>
+<pre><code>bundle.js</code></pre>
+					</section>
+					<section>
+					<ul>
+						<li>Routing</li>
+						<li>Client-side templating</li>
+						<li>Ajax calls</li>
+						<li>JSON data</li>
+					</ul>
+<pre><code>&lt;div class=&quot;entry&quot;&gt;
+	&lt;h1&gt;{{title}}&lt;/h1&gt;
+	&lt;div class=&quot;body&quot;&gt;
+		{{{body}}}
+	&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+					<aside class="notes">Features of Client-side</aside>
+					</section>
+					<section>
+						<h3>Negatives</h3>
+						<ul>
+							<li class="fragment">Initial load of JavaScript bundle required / blank screen</li>
+							<li class="fragment">Crawlability by bots</li>
+							<li class="fragment">JavaScript fragility</li>
+						</ul>
+						<aside class="notes">
+							low bandwidth, high latency situations a JS bundle can be problematic.
+							Plugins and toolbars can break JavaScript - common with high traffic sites
+						</aside>
+					</section>					
+				</section>
+
+				<section>
+					<section>
+						<h2>Universal rendering</h2>
+					</section>
+					<section>
+						<p>(Previously known as Isomorphic rendering)</p>
+					</section>
+					<section>
+						<blockquote cite="http://nerds.airbnb.com/isomorphic-javascript-future-web-apps/">
+							&ldquo;JavaScript applications that can run both on the client-side and the server-side&rdquo;
+						</blockquote>
+						<p><a href="http://nerds.airbnb.com/isomorphic-javascript-future-web-apps/"><small>http://nerds.airbnb.com/isomorphic-javascript-future-web-apps/</small></a></p>
+					<aside class="notes">
+						blog post: November 2013
+					</aside>
+					</section>
+					<section>
+						<p><img src="shared1.svg" style="background: none;border:0;box-shadow:0 0 0" /></p>
+					</section>
+					<section>
+						<p><img src="shared2.svg" style="background: none;border:0;box-shadow:0 0 0" /></p>
+					</section>
+					<section>
+						<h3>How does it work?</h3>
+						<ul>
+							<li class="fragment">Technically has been possible for years</li>							
+							<li class="fragment">Lack of tooling / business case / progression from Client rendering</li>
+							<li class="fragment">Smart phone problems with client rendering more prevalent</li>
+						</ul>
+					<aside class="notes">
+						Could have done this 6 years ago when node.js first appeared. 
+						No recent browser feature has been required
+					</aside>
+					</section>
+					<section>
+						<ul>
+							<li>Application needs server and client entry-points</li>
+							<li class="fragment">They initalise differently</li>
+							<li class="fragment">Rest of application code is shared</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Using React</h2>
+					</section>
+					<section>
+						<p>(Going to skip client-rendering)</p>
+					</section>
+					<section>
+						<h3>Server Rendering</h3>
+						<p><code>ReactDOMServer.renderToString(&lt;Component /&gt;)</code></p>
+						<blockquote cite="https://facebook.github.io/react/docs/top-level-api.html">
+							&ldquo;React will return an HTML string&rdquo;
+						</blockquote>
+						<aside class="notes">
+							another method ReactDOMServer.renderToStaticMarkup - render without extra dom-attributes
+						</aside>
+					</section>
+					<section>
+						<h3>Routing</h3>
+						<p><a href="https://www.youtube.com/watch?v=gshWucOdUIw" target="_blank">Video: react-router is compatible with universal rendering</a></p>
+					<aside class="notes">
+						Video shows server-side routes being replaced with the same routes used on the client and server rendering taking place
+					</aside>
+					</section>					
+					<section>
+						<h3>Passing State</h3>
+						<ul>
+							<li>When the server has generated the page it needs to 'pass' state to the client</li>
+							<li class="fragment">Solutions: 
+								<ol>
+									<li>serialise state in block of hidden HTML</li>
+									<li>store state in global JavaScript object</li>
+								</ol>
+							<li class="fragment">client entry point uses this to initialise its state</li>
+						</ul>
+					</section>
+					<section>
+						<p>iso: https://github.com/goatslacker/iso</p>
+<pre><code>
+// server.js
+request.get(&#39;*&#39;, function (req, res) {
+  var html = &#39;&lt;div&gt;Hello, World!&lt;/div&gt;&#39;;
+  iso.add(html, { state: { product_id: &#39;12345&#39; } })
+  res.render(iso.render())
+})
+
+// client.js
+Iso.bootstrap(function (state) {
+  // use state when initialisng
+})
+</pre></code>
+					</section>
+					<section>
+<pre><code>
+&lt;div 
+class="___iso-state___" data-key="_0" 
+data-state="{&quot;stores&quot;:{&quot;ProductStore&quot;:{&quot;products&quot;:[{&quot;name&quot;:&quot;Football&quot;,&quot;category&quot;:&quot;Sporting Goods&quot;,&quot;price&quot;:&quot;$49.99&quot;,&quot;stocked&quot;:true,&quot;visible&quot;:true},{&quot;name&quot;:&quot;Basketball&quot;,&quot;category&quot;:&quot;Sporting
+</pre></code>
+
+					</section>
+					<section>
+<pre><code>
+// server.js (redux example)
+// ...handle request, respond to action, generate html
+&lt;script dangerouslySetInnerHTML={{__html: `window.__data=${serialize(store.getState())};`}} charSet=&quot;UTF-8&quot;/&gt;
+
+// client.js
+createStore(history, client, window.__data);
+</pre></code>
+					</section>			
+				</section>
+
+				<section>
+					<h2>Example</h2>
+					<p><a href="http://itsquiz.com" target="_blank">http://itsquiz.com</a></p>
+				</section>
+
+				<section>
+					<section>
+						<h2>Difficulties</h2>
+					</section>
+					<section>
+						<blockquote cite="https://github.com/webbylab/itsquiz-wall">
+							&ldquo;There are a lot of tutorials and boilerplates showing how to write isomorphic ReactJs applications. But when it comes to real world apps, you'll find that all the turorials do not cover problems that you face in productions apps.&rdquo;
+						</blockquote>
+					</section>
+					<section>
+						<ul>
+							<li>Need to maintain a server</li>
+							<li class="fragment">The server and client need to understand the JavaScript (server-bundle)</li>
+							<li class="fragment">Non-JavaScript assets (css, images, fonts) need to be handled appropriately</li>
+							<li class="fragment">Layout using <code>DOM</code> methods e.g. <a href="http://packery.metafizzy.co/" target="_blank">Drag and Drop</a>, <a href="http://masonry.desandro.com/options.html" target="_blank">Masonry options</a></li>
+							<li class="fragment">Asychronous actions: <code>ReactDOMServer.renderToString()</code> is sychronous</li>
+							<li class="fragment">Handling Forms</li>
+							<li class="fragment">Tests that check both client and server</li>
+						</ul>
+					</section>
+					<aside class="notes">
+						Server component is relatively small, however need logging / monitoring / handling fall-over, more complex than index.html with js bundle.
+					</aside>
+					<section>
+						<p>Many of these issues are not considered in Universal rendering examples</p>
+						<p class="fragment">For these reasons you will move at a slower pace</p>
+					</section>					
+				</section>
+				<section>
+					<h2>Conclusion</h2>
+					<p class="fragment">Starting to see companies using Universal Rendering at the end of 2015</p>
+					<p class="fragment">Many aspects no longer ¯\_(ツ)_/¯</p>
+					<p class="fragment">Will still slow development pace</p>
+				</section>
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
